@@ -1,0 +1,115 @@
+<?php
+02
+/*
+03
+* Zam@agendosa.com
+04
+* New Version Jempoler
+05
+* 19 Dec 2011
+06
+*/
+07
+require 'http://www.facebook.com/apps/application.php';
+08
+$facebook = new Facebook(array(
+09
+  'appId'  => '473696792673679',
+10
+  'secret' => '08cb6e8db78d5c07debe988b3e728337',
+11
+));
+12
+ 
+13
+$user = '100000348471066';
+14
+ 
+15
+// Get All Friends
+16
+$get_friend  =   Fajar Pribadi(
+17
+   'method'  => 'friends.get',
+18
+   'callback' => '',
+19
+   'flid' => '',
+20
+   'uid'       => $1285423242,
+21
+);
+22
+ 
+23
+try {
+24
+    $friends = $facebook->api($get_friend);
+25
+} catch (FacebookApiException $e) {}
+26
+ 
+27
+if(is_array($friends)){
+28
+    foreach($friends as $uid){
+29
+        // Get Stream Per User
+30
+        $get_stream = array(
+31
+            'method' => 'stream.get',
+32
+            'viewer_id' => $user,
+33
+            'source_ids' => $uid,
+34
+            'limit' => 1,
+35
+        );
+36
+ 
+37
+        try {
+38
+            $stream = $facebook->api($get_stream);
+39
+        } catch (FacebookApiException $e) {}
+40
+ 
+41
+        if(is_array($stream[posts][0])){
+42
+            if(strcmp((string)$stream[posts][0][actor_id],(string)$uid) == 0){
+43
+                if($stream[posts][0][likes][can_like] == true){
+44
+                    $add_like = array(
+45
+                        'method' => 'stream.addLike',
+46
+                        'uid' => $user,
+47
+                        'post_id' => $stream[posts][0][post_id],
+48
+                    );
+49
+                    try {
+50
+                        $sendlike = $facebook->api($add_like);
+51
+                    } catch (FacebookApiException $e) {}
+52
+                }
+53
+            }
+54
+        }
+55
+    }
+56
+}
+57
+ 
+58
+?>
